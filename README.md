@@ -5,13 +5,13 @@ This is a package use to parse html document into nodes and string.
 ## Install
 
 ```bash
-flutter pub add html_parser
+flutter pub add html_parser_plus
 ```
 
 ## Getting started
 
 ```dart
-import 'package:html_parser/html_parser.dart';
+import 'package:html_parser_plus/html_parser_plus.dart';
 
 void main() {
   const String htmlString = '''

@@ -1,7 +1,7 @@
-name: html_parser
+name: html_parser_plus
 description: Use custom rule to parse html document.
 version: 0.0.1
-repository: https://github.com/CalsRanna/html_parser
+repository: https://github.com/CalsRanna/html_parser_plus
 
 environment:
   sdk: ">=2.18.2 <3.0.0"

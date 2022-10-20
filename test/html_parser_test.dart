@@ -1,7 +1,7 @@
 import 'package:flutter_test/flutter_test.dart';
 import 'package:html/dom.dart';
 
-import 'package:html_parser/html_parser.dart';
+import 'package:html_parser_plus/html_parser_plus.dart';
 import 'package:xpath_selector/xpath_selector.dart';
 
 void main() {
