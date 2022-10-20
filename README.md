@@ -46,7 +46,6 @@ void main() {
   parser.parse(node,
       '//div/a/@href|function:replace(https://,)|function:substring(0,10)');
   parser.parseNodes(node, '//tr/td|function:sublist(0,2)');
-  parser.parseNodes(node, '//tr/td|function:sublist(0,2)');
 }
 
 ```
@@ -55,9 +54,9 @@ void main() {
 
 So far, we have supported some **xpath** syntax by **xpath_selector**, and three functions list below:
 
-- **sublist** for List<XpathNode<Node>>
-- **substring** for String
-- **replace** for String
+- **sublist** for `List<XpathNode<Node>>`
+- **substring** for `String`
+- **replace** for `String`
 
 > You should know that in the function, the params can be or not be wrapped by **'** or **"**.
 
