@@ -5,7 +5,7 @@ import 'package:html_parser_plus/html_parser_plus.dart';
 import 'package:xpath_selector/xpath_selector.dart';
 
 void main() {
-  test('parse and parseNodes works well', () {
+  test('query and queryNodes works well', () {
     const String htmlString = '''
       <html lang="en">
       <body>
@@ -33,14 +33,14 @@ void main() {
       </html>
       ''';
     final parser = HtmlParser();
-    final node = parser.query(htmlString);
-    expect(parser.parse(node, '//div/a@text'), 'author');
+    final node = parser.parse(htmlString);
+    expect(parser.query(node, '//div/a@text'), 'author');
     expect(
-        parser.parse(node,
+        parser.query(node,
             '//div/a/@href|function:replace(https://,)|function:substring(0,10)'),
         'github.com');
-    expect(parser.parseNodes(node, '//tr/td|function:sublist(0,2)').runtimeType,
+    expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').runtimeType,
         List<XPathNode<Node>>);
-    expect(parser.parseNodes(node, '//tr/td|function:sublist(0,2)').length, 2);
+    expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').length, 2);
   });
 }

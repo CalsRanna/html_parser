@@ -28,9 +28,9 @@ void main() {
       </html>
       ''';
   final parser = HtmlParser();
-  final node = parser.query(htmlString);
-  parser.parse(node, '//div/a@text');
-  parser.parse(node,
+  final node = parser.parse(htmlString);
+  parser.query(node, '//div/a@text');
+  parser.query(node,
       '//div/a/@href|function:replace(https://,)|function:substring(0,10)');
-  parser.parseNodes(node, '//tr/td|function:sublist(0,2)');
+  parser.queryNodes(node, '//tr/td|function:sublist(0,2)');
 }

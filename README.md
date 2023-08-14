@@ -60,6 +60,6 @@ So far, we have supported some **xpath** syntax by **xpath_selector**, and three
 
 > You should know that in the function, the params can be or not be wrapped by **'** or **"**.
 
-> And the rule is like **//div/a@text|function:repalce(Author,)|function:replace(' ','')**.
+> And the rule is like **//div/a@text|function:replace(Author,)|function:replace(' ','')**.
 
 > Use **|** to pipe all rules.
