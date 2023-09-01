@@ -60,6 +60,21 @@ class HtmlParser {
       final start = int.parse(params.first.trim());
       final end = params.length >= 2 ? int.parse(params.last.trim()) : null;
       return string.substring(start, end);
+    } else if (rule.function.startsWith('trim')) {
+      return string.trim();
+    } else if (rule.function.startsWith('replaceRegExp')) {
+      final params = rule.function
+          .replaceAll('replaceRegExp', '')
+          .replaceAll('(', '')
+          .replaceAll(')', '')
+          .replaceAll('\'', '')
+          .replaceAll('"', '')
+          .split(',');
+      final from = params.first;
+      var replace = params.length >= 2 ? params.last : '';
+      replace = replace.replaceAll(r'\n', '\n');
+      replace = replace.replaceAll(r'\u2003', '\u2003');
+      return string.replaceAll(RegExp(from), replace);
     } else if (rule.function.startsWith('replace')) {
       final params = rule.function
           .replaceAll('replace', '')
@@ -67,6 +82,8 @@ class HtmlParser {
           .replaceAll(')', '')
           .replaceAll('\'', '')
           .replaceAll('"', '')
+          .replaceAll(r'\n', '\n')
+          .replaceAll(r'\u2003', '\u2003')
           .split(',');
       final from = params.first;
       final replace = params.length >= 2 ? params.last : '';

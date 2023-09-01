@@ -1,3 +1,8 @@
+## 0.0.3
+
+- add `trim` and `replaceRegExp` function
+- support `\n` and `\u2003` in rule
+
 ## 0.0.2
 
 - support `html` attribute

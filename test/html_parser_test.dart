@@ -29,6 +29,7 @@ void main() {
           </table>
       </div>
       <div class="end">end</div>
+      <p>Hello\nworld</p>
       </body>
       </html>
       ''';
@@ -42,5 +43,6 @@ void main() {
     expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').runtimeType,
         List<XPathNode<Node>>);
     expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').length, 2);
+    expect(parser.query(node, '//p@text|function:replace(\n,)'), 'Helloworld');
   });
 }
