@@ -1,3 +1,7 @@
+## 0.1.0
+
+- support `jsonPath` syntax
+
 ## 0.0.3
 
 - add `trim` and `replaceRegExp` function

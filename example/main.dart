@@ -28,9 +28,23 @@ void main() {
       </html>
       ''';
   final parser = HtmlParser();
-  final node = parser.parse(htmlString);
+  var node = parser.parse(htmlString);
   parser.query(node, '//div/a@text');
-  parser.query(node,
-      '//div/a/@href|function:replace(https://,)|function:substring(0,10)');
+  parser.query(
+    node,
+    '//div/a/@href|function:replace(https://,)|function:substring(0,10)',
+  );
   parser.queryNodes(node, '//tr/td|function:sublist(0,2)');
+
+  const String jsonString = '''
+      {"author":"Cals Ranna","website":"https://github.com/CalsRanna","books":[{"name":"Hello"},{"name":"World"},{"name":"!"}]}
+      ''';
+
+  node = parser.parse(jsonString);
+  parser.query(node, r'$.author');
+  parser.query(
+    node,
+    r'$.website|function:replace(https://,)|function:substring(0,10)',
+  );
+  parser.queryNodes(node, r'$.books|function:sublist(0,2)');
 }

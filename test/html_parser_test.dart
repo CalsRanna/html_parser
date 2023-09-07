@@ -1,11 +1,8 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:html/dom.dart';
-
 import 'package:html_parser_plus/html_parser_plus.dart';
-import 'package:xpath_selector/xpath_selector.dart';
 
 void main() {
-  test('query and queryNodes works well', () {
+  test('xpath works well', () {
     const String htmlString = '''
       <html lang="en">
       <body>
@@ -41,8 +38,25 @@ void main() {
             '//div/a/@href|function:replace(https://,)|function:substring(0,10)'),
         'github.com');
     expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').runtimeType,
-        List<XPathNode<Node>>);
+        List<HtmlParserNode>);
     expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').length, 2);
     expect(parser.query(node, '//p@text|function:replace(\n,)'), 'Helloworld');
+  });
+
+  test('jsonpath works well', () {
+    const String jsonString = '''
+      {"author":"Cals Ranna","website":"https://github.com/CalsRanna","books":[{"name":"Hello"},{"name":"World"},{"name":"!"}]}
+      ''';
+    final parser = HtmlParser();
+    final node = parser.parse(jsonString);
+    expect(parser.query(node, r'$.author'), 'Cals Ranna');
+    expect(
+        parser.query(node,
+            r'$.website|function:replace(https://,)|function:substring(0,10)'),
+        'github.com');
+    expect(
+        parser.queryNodes(node, r'$.books|function:sublist(0,2)').runtimeType,
+        List<HtmlParserNode>);
+    expect(parser.queryNodes(node, r'$.books|function:sublist(0,2)').length, 2);
   });
 }

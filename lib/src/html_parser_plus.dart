@@ -1,41 +1,48 @@
+import 'dart:convert';
+
 import 'package:html/dom.dart';
+import 'package:json_path/json_path.dart';
 import 'package:xpath_selector/xpath_selector.dart';
 import 'package:xpath_selector_html_parser/xpath_selector_html_parser.dart';
 
 import 'rule.dart';
 
 class HtmlParser {
-  XPathNode<Node> parse(String html) {
-    return HtmlXPath.html(html).root;
+  HtmlParserNode parse(String html) {
+    try {
+      return HtmlParserNode()..jsonNode = jsonDecode(html);
+    } catch (error) {
+      return HtmlParserNode()..xpathNode = HtmlXPath.html(html).root;
+    }
   }
 
-  String query(XPathNode<Node> node, String? rule) {
-    if (rule == null || rule.isEmpty) {
-      return '';
-    }
+  String query(HtmlParserNode node, String? rule) {
     String result = '';
+    if (rule == null || rule.isEmpty) {
+      return result;
+    }
     final rules = _generateRules(rule);
     for (var item in rules) {
-      if (item.protocol == 'xpath') {
-        result = _pipeRule(node, item);
-      } else if (item.protocol == 'function') {
+      if (item.protocol == 'function') {
         result = _pipeFunction(result, item);
+      } else {
+        result = _pipeRule(node, item);
       }
     }
     return result;
   }
 
-  List<XPathNode<Node>> queryNodes(XPathNode<Node> node, String? rule) {
+  List<HtmlParserNode> queryNodes(HtmlParserNode node, String? rule) {
+    List<HtmlParserNode> results = [];
     if (rule == null || rule.isEmpty) {
-      return <XPathNode<Node>>[];
+      return results;
     }
     final rules = _generateRules(rule);
-    List<XPathNode<Node>> results = [];
     for (var item in rules) {
-      if (item.protocol == 'xpath') {
-        results = _pipeRuleForNodes(node, item);
-      } else if (item.protocol == 'function') {
+      if (item.protocol == 'function') {
         results = _pipeFunctionForNodes(results, item);
+      } else {
+        results = _pipeRuleForNodes(node, item);
       }
     }
     return results;
@@ -93,8 +100,8 @@ class HtmlParser {
     }
   }
 
-  List<XPathNode<Node>> _pipeFunctionForNodes(
-      List<XPathNode<Node>> nodes, Rule rule) {
+  List<HtmlParserNode> _pipeFunctionForNodes(
+      List<HtmlParserNode> nodes, Rule rule) {
     if (rule.function.startsWith('sublist')) {
       final params = rule.function
           .replaceAll('sublist', '')
@@ -109,24 +116,49 @@ class HtmlParser {
     }
   }
 
-  String _pipeRule(XPathNode<Node> node, Rule rule) {
-    final nodes = node.queryXPath(rule.rule).nodes;
-    String? result;
-    switch (rule.attribute) {
-      case 'html':
-        result = nodes.map((item) => item.node.parent?.innerHtml).join();
-        break;
-      case 'text':
-        result = nodes.map((item) => item.text).join('\n');
-        break;
-      default:
-        result = nodes.map((item) => item.attributes[rule.attribute]).join();
-        break;
+  String _pipeRule(HtmlParserNode node, Rule rule) {
+    if (node.xpathNode != null) {
+      final nodes = node.xpathNode!.queryXPath(rule.rule).nodes;
+      String? result;
+      switch (rule.attribute) {
+        case 'html':
+          result = nodes.map((item) => item.node.parent?.innerHtml).join();
+          break;
+        case 'text':
+          result = nodes.map((item) => item.text).join('\n');
+          break;
+        default:
+          result = nodes.map((item) => item.attributes[rule.attribute]).join();
+          break;
+      }
+      return result;
+    } else {
+      final match = JsonPath(rule.rule).read(node.jsonNode!);
+      if (match.isNotEmpty) {
+        return match.first.value.toString();
+      } else {
+        return '';
+      }
     }
-    return result;
   }
 
-  List<XPathNode<Node>> _pipeRuleForNodes(XPathNode<Node> node, Rule rule) {
-    return node.queryXPath(rule.rule).nodes;
+  List<HtmlParserNode> _pipeRuleForNodes(HtmlParserNode node, Rule rule) {
+    if (node.xpathNode != null) {
+      final nodes = node.xpathNode!.queryXPath(rule.rule).nodes;
+      return nodes.map((item) => HtmlParserNode()..xpathNode = item).toList();
+    } else {
+      final match = JsonPath(rule.rule).read(node.jsonNode!);
+      if (match.isNotEmpty) {
+        final json = match.first.value as List<dynamic>;
+        return json.map((e) => HtmlParserNode()..jsonNode = e).toList();
+      } else {
+        return <HtmlParserNode>[];
+      }
+    }
   }
+}
+
+class HtmlParserNode {
+  XPathNode<Node>? xpathNode;
+  Map<String, dynamic>? jsonNode;
 }

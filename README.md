@@ -41,22 +41,44 @@ void main() {
       </html>
       ''';
   final parser = HtmlParser();
-  final node = parser.query(htmlString);
-  parser.parse(node, '//div/a@text');
-  parser.parse(node,
-      '//div/a/@href|function:replace(https://,)|function:substring(0,10)');
-  parser.parseNodes(node, '//tr/td|function:sublist(0,2)');
+  var node = parser.parse(htmlString);
+  parser.query(node, '//div/a@text');
+  parser.query(
+    node,
+    '//div/a/@href|function:replace(https://,)|function:substring(0,10)',
+  );
+  parser.queryNodes(node, '//tr/td|function:sublist(0,2)');
+
+  const String jsonString = '''
+      {"author":"Cals Ranna","website":"https://github.com/CalsRanna","books":[{"name":"Hello"},{"name":"World"},{"name":"!"}]}
+      ''';
+
+  node = parser.parse(jsonString);
+  parser.query(node, r'$.author');
+  parser.query(
+    node,
+    r'$.website|function:replace(https://,)|function:substring(0,10)',
+  );
+  parser.queryNodes(node, r'$.books|function:sublist(0,2)');
 }
+
 
 ```
 
 ## Usage
 
-So far, we have supported some **xpath** syntax by **xpath_selector**, and three functions list below:
+So far, we have supported:
 
-- **sublist** for `List<XpathNode<Node>>`
-- **substring** for `String`
+- some **xpath** syntax by **xpath_selector**
+- almost all **jsonPath** syntax by **json_path**
+
+And five functions list below:
+
+- **sublist** for `List<HtmlParserNode>`
 - **replace** for `String`
+- **replaceRegExp** for `String`
+- **substring** for `String`
+- **trim** for `String`
 
 > You should know that in the function, the params can be or not be wrapped by **'** or **"**.
 

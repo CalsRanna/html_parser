@@ -14,6 +14,9 @@ class Rule {
       attribute = '';
       protocol = 'function';
       function = value.replaceAll('function:', '');
+    } else if (value.startsWith(r'$')) {
+      protocol = 'jsonpath';
+      rule = value;
     } else {
       rule = value.replaceAll('$protocol:', '').replaceAll('@$attribute', '');
     }
