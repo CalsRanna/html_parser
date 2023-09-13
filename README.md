@@ -72,16 +72,17 @@ So far, we have supported:
 - some **xpath** syntax by **xpath_selector**
 - almost all **jsonPath** syntax by **json_path**
 
-And five functions list below:
+And six functions list below:
 
 - **sublist** for `List<HtmlParserNode>`
 - **replace** for `String`
 - **replaceRegExp** for `String`
 - **substring** for `String`
 - **trim** for `String`
+- **interpolate** for `String`, use `{{string}}` to indicate the piped value
 
-> You should know that in the function, the params can be or not be wrapped by **'** or **"**.
+> You should know that in the function, the params **CAN NOT** be wrapped by **'** or **"**.
 
-> And the rule is like **//div/a@text|function:replace(Author,)|function:replace(' ','')**.
+> And the rule is like **//div/a@text|function:replace(Author,)|function:replace( ,)|function:interpolate(作者：{{string}})**.
 
 > Use **|** to pipe all rules.

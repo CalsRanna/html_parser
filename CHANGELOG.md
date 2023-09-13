@@ -1,3 +1,7 @@
+## 0.1.1
+
+- add `interpolate` function
+
 ## 0.1.0
 
 - support `jsonPath` syntax

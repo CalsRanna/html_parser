@@ -58,56 +58,48 @@ class HtmlParser {
   }
 
   String _pipeFunction(String string, Rule rule) {
-    if (rule.function.startsWith('substring')) {
-      final params = rule.function
-          .replaceAll('substring', '')
-          .replaceAll('(', '')
-          .replaceAll(')', '')
-          .split(',');
+    final function = rule.function;
+    if (function.startsWith('substring')) {
+      final paramsString = _getParamsString(function);
+      final params = paramsString.split(',');
       final start = int.parse(params.first.trim());
       final end = params.length >= 2 ? int.parse(params.last.trim()) : null;
       return string.substring(start, end);
-    } else if (rule.function.startsWith('trim')) {
+    } else if (function.startsWith('trim')) {
       return string.trim();
-    } else if (rule.function.startsWith('replaceRegExp')) {
-      final params = rule.function
-          .replaceAll('replaceRegExp', '')
-          .replaceAll('(', '')
-          .replaceAll(')', '')
-          .replaceAll('\'', '')
-          .replaceAll('"', '')
-          .split(',');
+    } else if (function.startsWith('replaceRegExp')) {
+      final paramsString = _getParamsString(function);
+      final params = paramsString.split(',');
       final from = params.first;
       var replace = params.length >= 2 ? params.last : '';
       replace = replace.replaceAll(r'\n', '\n');
       replace = replace.replaceAll(r'\u2003', '\u2003');
       return string.replaceAll(RegExp(from), replace);
-    } else if (rule.function.startsWith('replace')) {
-      final params = rule.function
-          .replaceAll('replace', '')
-          .replaceAll('(', '')
-          .replaceAll(')', '')
-          .replaceAll('\'', '')
-          .replaceAll('"', '')
+    } else if (function.startsWith('replace')) {
+      final paramsString = _getParamsString(function);
+      final params = paramsString
           .replaceAll(r'\n', '\n')
           .replaceAll(r'\u2003', '\u2003')
           .split(',');
       final from = params.first;
       final replace = params.length >= 2 ? params.last : '';
       return string.replaceAll(from, replace);
+    } else if (function.startsWith('interpolate')) {
+      final paramsString = _getParamsString(function);
+      return paramsString.replaceAll('{{string}}', string);
     } else {
       return string;
     }
   }
 
   List<HtmlParserNode> _pipeFunctionForNodes(
-      List<HtmlParserNode> nodes, Rule rule) {
+    List<HtmlParserNode> nodes,
+    Rule rule,
+  ) {
+    final function = rule.function;
     if (rule.function.startsWith('sublist')) {
-      final params = rule.function
-          .replaceAll('sublist', '')
-          .replaceAll('(', '')
-          .replaceAll(')', '')
-          .split(',');
+      final paramsString = _getParamsString(function);
+      final params = paramsString.split(',');
       final start = int.parse(params.first.trim());
       final end = params.length >= 2 ? int.parse(params.last.trim()) : null;
       return nodes.sublist(start, end);
@@ -155,6 +147,13 @@ class HtmlParser {
         return <HtmlParserNode>[];
       }
     }
+  }
+
+  String _getParamsString(String function) {
+    final patterns = function.split('(');
+    if (patterns.isEmpty) return '';
+    final body = patterns.first;
+    return function.substring(body.length + 1, function.length - 1);
   }
 }
 

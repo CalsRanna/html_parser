@@ -34,13 +34,25 @@ void main() {
     final node = parser.parse(htmlString);
     expect(parser.query(node, '//div/a@text'), 'author');
     expect(
-        parser.query(node,
-            '//div/a/@href|function:replace(https://,)|function:substring(0,10)'),
-        'github.com');
-    expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').runtimeType,
-        List<HtmlParserNode>);
+      parser.query(
+        node,
+        '//div/a/@href|function:replace(https://,)|function:substring(0,10)',
+      ),
+      'github.com',
+    );
+    expect(
+      parser.queryNodes(node, '//tr/td|function:sublist(0,2)').runtimeType,
+      List<HtmlParserNode>,
+    );
     expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').length, 2);
     expect(parser.query(node, '//p@text|function:replace(\n,)'), 'Helloworld');
+    expect(
+      parser.query(
+        node,
+        '//p@text|function:replace(\n,)|function:interpolate(HI{{string}})',
+      ),
+      'HIHelloworld',
+    );
   });
 
   test('jsonpath works well', () {
