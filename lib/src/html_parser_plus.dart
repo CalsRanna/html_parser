@@ -70,22 +70,35 @@ class HtmlParser {
     } else if (function.startsWith('replaceRegExp')) {
       final paramsString = _getParamsString(function);
       final params = paramsString.split(',');
-      final from = params.first;
+      final from = params.getRange(0, params.length - 1).join(',');
       var replace = params.length >= 2 ? params.last : '';
       replace = replace.replaceAll(r'\n', '\n');
+      replace = replace.replaceAll(r'\u00A0', '\u00A0');
       replace = replace.replaceAll(r'\u2003', '\u2003');
       return string.replaceAll(RegExp(from), replace);
+    } else if (function.startsWith('replaceFirst')) {
+      var paramsString = _getParamsString(function);
+      paramsString = paramsString.replaceAll(r'\n', '\n');
+      paramsString = paramsString.replaceAll(r'\u00A0', '\u00A0');
+      paramsString = paramsString.replaceAll(r'\u2003', '\u2003');
+      final params = paramsString.split(',');
+      final from = params.getRange(0, params.length - 1).join(',');
+      final replace = params.length >= 2 ? params.last : '';
+      return string.replaceFirst(from, replace);
     } else if (function.startsWith('replace')) {
-      final paramsString = _getParamsString(function);
-      final params = paramsString
-          .replaceAll(r'\n', '\n')
-          .replaceAll(r'\u2003', '\u2003')
-          .split(',');
-      final from = params.first;
+      var paramsString = _getParamsString(function);
+      paramsString = paramsString.replaceAll(r'\n', '\n');
+      paramsString = paramsString.replaceAll(r'\u00A0', '\u00A0');
+      paramsString = paramsString.replaceAll(r'\u2003', '\u2003');
+      final params = paramsString.split(',');
+      final from = params.getRange(0, params.length - 1).join(',');
       final replace = params.length >= 2 ? params.last : '';
       return string.replaceAll(from, replace);
     } else if (function.startsWith('interpolate')) {
-      final paramsString = _getParamsString(function);
+      var paramsString = _getParamsString(function);
+      paramsString = paramsString.replaceAll(r'\n', '\n');
+      paramsString = paramsString.replaceAll(r'\u00A0', '\u00A0');
+      paramsString = paramsString.replaceAll(r'\u2003', '\u2003');
       return paramsString.replaceAll('{{string}}', string);
     } else {
       return string;

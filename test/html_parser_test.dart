@@ -26,7 +26,7 @@ void main() {
           </table>
       </div>
       <div class="end">end</div>
-      <p>Hello\nworld</p>
+      <p>Hello\nWorld\n</p>
       </body>
       </html>
       ''';
@@ -36,22 +36,26 @@ void main() {
     expect(
       parser.query(
         node,
-        '//div/a/@href|function:replace(https://,)|function:substring(0,10)',
+        '//div/a/@href|dart.replace(https://,)|dart.substring(0,10)',
       ),
       'github.com',
     );
     expect(
-      parser.queryNodes(node, '//tr/td|function:sublist(0,2)').runtimeType,
+      parser.queryNodes(node, '//tr/td|dart.sublist(0,2)').runtimeType,
       List<HtmlParserNode>,
     );
-    expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').length, 2);
-    expect(parser.query(node, '//p@text|function:replace(\n,)'), 'Helloworld');
+    expect(parser.queryNodes(node, '//tr/td|dart.sublist(0,2)').length, 2);
+    expect(parser.query(node, '//p@text|dart.replace(\n,)'), 'HelloWorld');
+    expect(
+      parser.query(node, '//p@text|dart.replaceFirst(\n,)'),
+      'HelloWorld\n',
+    );
     expect(
       parser.query(
         node,
-        '//p@text|function:replace(\n,)|function:interpolate(HI{{string}})',
+        '//p@text|dart.replace(\n,)|dart.interpolate(HI{{string}})',
       ),
-      'HIHelloworld',
+      'HIHelloWorld',
     );
   });
 
@@ -63,12 +67,16 @@ void main() {
     final node = parser.parse(jsonString);
     expect(parser.query(node, r'$.author'), 'Cals Ranna');
     expect(
-        parser.query(node,
-            r'$.website|function:replace(https://,)|function:substring(0,10)'),
-        'github.com');
+      parser.query(
+        node,
+        r'$.website|dart.replace(https://,)|dart.substring(0,10)',
+      ),
+      'github.com',
+    );
     expect(
-        parser.queryNodes(node, r'$.books|function:sublist(0,2)').runtimeType,
-        List<HtmlParserNode>);
-    expect(parser.queryNodes(node, r'$.books|function:sublist(0,2)').length, 2);
+      parser.queryNodes(node, r'$.books|dart.sublist(0,2)').runtimeType,
+      List<HtmlParserNode>,
+    );
+    expect(parser.queryNodes(node, r'$.books|dart.sublist(0,2)').length, 2);
   });
 }

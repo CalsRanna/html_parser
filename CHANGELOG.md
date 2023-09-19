@@ -1,3 +1,9 @@
+## 0.1.2
+
+- add `replaceFirst` function
+- `interpolate` function support several unicode
+- add `dart.` modifier instead of `function:`, both functional
+
 ## 0.1.1
 
 - add `interpolate` function

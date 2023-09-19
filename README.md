@@ -45,9 +45,9 @@ void main() {
   parser.query(node, '//div/a@text');
   parser.query(
     node,
-    '//div/a/@href|function:replace(https://,)|function:substring(0,10)',
+    '//div/a/@href|dart.replace(https://,)|dart.substring(0,10)',
   );
-  parser.queryNodes(node, '//tr/td|function:sublist(0,2)');
+  parser.queryNodes(node, '//tr/td|dart.sublist(0,2)');
 
   const String jsonString = '''
       {"author":"Cals Ranna","website":"https://github.com/CalsRanna","books":[{"name":"Hello"},{"name":"World"},{"name":"!"}]}
@@ -57,9 +57,9 @@ void main() {
   parser.query(node, r'$.author');
   parser.query(
     node,
-    r'$.website|function:replace(https://,)|function:substring(0,10)',
+    r'$.website|dart.replace(https://,)|dart.substring(0,10)',
   );
-  parser.queryNodes(node, r'$.books|function:sublist(0,2)');
+  parser.queryNodes(node, r'$.books|dart.sublist(0,2)');
 }
 
 
@@ -72,10 +72,11 @@ So far, we have supported:
 - some **xpath** syntax by **xpath_selector**
 - almost all **jsonPath** syntax by **json_path**
 
-And six functions list below:
+And seven supported functions list below:
 
 - **sublist** for `List<HtmlParserNode>`
 - **replace** for `String`
+- **replaceFirst** for `String`
 - **replaceRegExp** for `String`
 - **substring** for `String`
 - **trim** for `String`
@@ -83,6 +84,10 @@ And six functions list below:
 
 > You should know that in the function, the params **CAN NOT** be wrapped by **'** or **"**.
 
-> And the rule is like **//div/a@text|function:replace(Author,)|function:replace( ,)|function:interpolate(作者：{{string}})**.
+> And the rule is like **//div/a@text|dart.replace(Author,)|dart.replace( ,)|dart.interpolate(作者：{{string}})**.
 
 > Use **|** to pipe all rules.
+
+## Legacy
+
+- `function:` will be replaced by `dart.` in the future.
