@@ -1,6 +1,6 @@
 name: html_parser_plus
 description: Use custom rule to parse html document.
-version: 0.1.2
+version: 0.1.3
 repository: https://github.com/CalsRanna/html_parser_plus
 
 environment:

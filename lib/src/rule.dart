@@ -13,8 +13,7 @@ class Rule {
     if (value.startsWith('function:') || value.startsWith('dart.')) {
       attribute = '';
       protocol = 'function';
-      function = value.replaceAll('function:', '');
-      function = value.replaceAll('dart.', '');
+      function = value.replaceAll('function:', '').replaceAll('dart.', '');
     } else if (value.startsWith(r'$')) {
       protocol = 'jsonpath';
       rule = value;

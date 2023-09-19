@@ -1,3 +1,7 @@
+## 0.1.3
+
+- fix compatibility of function
+
 ## 0.1.2
 
 - add `replaceFirst` function

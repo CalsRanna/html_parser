@@ -36,24 +36,24 @@ void main() {
     expect(
       parser.query(
         node,
-        '//div/a/@href|dart.replace(https://,)|dart.substring(0,10)',
+        '//div/a/@href|function:replace(https://,)|function:substring(0,10)',
       ),
       'github.com',
     );
     expect(
-      parser.queryNodes(node, '//tr/td|dart.sublist(0,2)').runtimeType,
+      parser.queryNodes(node, '//tr/td|function:sublist(0,2)').runtimeType,
       List<HtmlParserNode>,
     );
-    expect(parser.queryNodes(node, '//tr/td|dart.sublist(0,2)').length, 2);
-    expect(parser.query(node, '//p@text|dart.replace(\n,)'), 'HelloWorld');
+    expect(parser.queryNodes(node, '//tr/td|function:sublist(0,2)').length, 2);
+    expect(parser.query(node, '//p@text|function:replace(\n,)'), 'HelloWorld');
     expect(
-      parser.query(node, '//p@text|dart.replaceFirst(\n,)'),
+      parser.query(node, '//p@text|function:replaceFirst(\n,)'),
       'HelloWorld\n',
     );
     expect(
       parser.query(
         node,
-        '//p@text|dart.replace(\n,)|dart.interpolate(HI{{string}})',
+        '//p@text|function:replace(\n,)|function:interpolate(HI{{string}})',
       ),
       'HIHelloWorld',
     );
@@ -69,14 +69,14 @@ void main() {
     expect(
       parser.query(
         node,
-        r'$.website|dart.replace(https://,)|dart.substring(0,10)',
+        r'$.website|function:replace(https://,)|function:substring(0,10)',
       ),
       'github.com',
     );
     expect(
-      parser.queryNodes(node, r'$.books|dart.sublist(0,2)').runtimeType,
+      parser.queryNodes(node, r'$.books|function:sublist(0,2)').runtimeType,
       List<HtmlParserNode>,
     );
-    expect(parser.queryNodes(node, r'$.books|dart.sublist(0,2)').length, 2);
+    expect(parser.queryNodes(node, r'$.books|function:sublist(0,2)').length, 2);
   });
 }
