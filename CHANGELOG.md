@@ -1,3 +1,7 @@
+## 0.1.4
+
+- add `match` function
+
 ## 0.1.3
 
 - fix compatibility of function
