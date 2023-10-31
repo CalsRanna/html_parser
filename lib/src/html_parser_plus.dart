@@ -100,6 +100,14 @@ class HtmlParser {
       paramsString = paramsString.replaceAll(r'\u00A0', '\u00A0');
       paramsString = paramsString.replaceAll(r'\u2003', '\u2003');
       return paramsString.replaceAll('{{string}}', string);
+    } else if (function.startsWith('match')) {
+      final paramsString = _getParamsString(function);
+      final regExp = RegExp(paramsString);
+      final match = regExp.firstMatch(string);
+      if (match != null) {
+        return match.group(0) ?? '';
+      }
+      return '';
     } else {
       return string;
     }

@@ -81,6 +81,7 @@ And seven supported functions list below:
 - **substring** for `String`
 - **trim** for `String`
 - **interpolate** for `String`, use `{{string}}` to indicate the piped value
+- **match** for `String`
 
 > You should know that in the function, the params **CAN NOT** be wrapped by **'** or **"**.
 
