@@ -132,42 +132,33 @@ class HtmlParser {
   String _pipeRule(HtmlParserNode node, Rule rule) {
     if (node.xpathNode != null) {
       final nodes = node.xpathNode!.queryXPath(rule.rule).nodes;
-      String? result;
       switch (rule.attribute) {
         case 'html':
-          result = nodes.map((item) => item.node.parent?.innerHtml).join();
-          break;
+          return nodes.map((item) => item.node.parent?.innerHtml).join();
         case 'text':
-          result = nodes.map((item) => item.text).join('\n');
-          break;
+          return nodes.map((item) => item.text).join('\n');
         default:
-          result = nodes.map((item) => item.attributes[rule.attribute]).join();
-          break;
-      }
-      return result;
-    } else {
-      final match = JsonPath(rule.rule).read(node.jsonNode!);
-      if (match.isNotEmpty) {
-        return match.first.value.toString();
-      } else {
-        return '';
+          return nodes.map((item) => item.attributes[rule.attribute]).join();
       }
     }
+    final values = JsonPath(rule.rule).readValues(node.jsonNode!);
+    if (values.isNotEmpty) {
+      return values.first.toString();
+    }
+    return '';
   }
 
   List<HtmlParserNode> _pipeRuleForNodes(HtmlParserNode node, Rule rule) {
     if (node.xpathNode != null) {
       final nodes = node.xpathNode!.queryXPath(rule.rule).nodes;
       return nodes.map((item) => HtmlParserNode()..xpathNode = item).toList();
-    } else {
-      final match = JsonPath(rule.rule).read(node.jsonNode!);
-      if (match.isNotEmpty) {
-        final json = match.first.value as List<dynamic>;
-        return json.map((e) => HtmlParserNode()..jsonNode = e).toList();
-      } else {
-        return <HtmlParserNode>[];
-      }
     }
+    final values = JsonPath(rule.rule).readValues(node.jsonNode!);
+    if (values.isNotEmpty) {
+      final json = values.first as List<dynamic>;
+      return json.map((e) => HtmlParserNode()..jsonNode = e).toList();
+    }
+    return <HtmlParserNode>[];
   }
 
   String _getParamsString(String function) {
